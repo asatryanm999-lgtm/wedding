@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приглашение - Дима и Настя</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* ԳՈՒՅՆԵՐԸ. Շամպայն և Սպիտակ */
+        :root { 
+            --accent: #f7e7ce; /* Շամպայնի գույն */
+            --bg: #ffffff;    /* Մաքուր սպիտակ */
+            --text: #4a4a4a;  /* Մուգ տեքստ */
+            --text-light: #ffffff; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { height: 100%; font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text); scroll-snap-type: y mandatory; overflow-y: scroll; scroll-behavior: smooth; }
+        
+        section { 
+            height: 100vh; width: 100%; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            text-align: center; padding: 20px; scroll-snap-align: start; position: relative;
+        }
+
+        /* ԲԱՑՈՒՄԻ ՆԿԱՐԸ (ՕՎԵՐԼԵՅ) */
+        #welcome-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('photo2.jpg') no-repeat center center; 
+            background-size: cover; color: var(--text-light); 
+            z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 1s ease-out;
+        }
+
+        /* ՀԻՄՆԱԿԱՆ ԷՋԵՐԻ ՆԿԱՐՆԵՐԸ */
+        .page-bg { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-repeat: no-repeat; background-position: center center; background-size: cover;
+            opacity: 0.15; z-index: -1;
+        }
+
+        .title { font-family: 'Dancing Script', cursive; font-size: 3.8rem; color: var(--accent); margin-bottom: 10px; }
+        .subtitle { font-size: 1.1rem; letter-spacing: 4px; text-transform: uppercase; color: var(--text-light); opacity: 0.9; }
+
+        .info-card { background: white; padding: 35px; border-radius: 30px; box-shadow: 0 15px 40px rgba(247,231,206,0.3); max-width: 360px; width: 100%; border: 1px solid #f9f0ee; }
+        .info-title { color: var(--accent); font-size: 1.5rem; margin-bottom: 20px; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        
+        /* Թայմերի ոճը */
+        .timer { display: flex; gap: 12px; margin-top: 25px; justify-content: center; }
+        .t-unit { background: var(--accent); color: #5d4037; padding: 12px; border-radius: 15px; min-width: 65px; box-shadow: 0 5px 15px rgba(247,231,206,0.4); }
+        .t-unit span { display: block; font-size: 1.4rem; font-weight: bold; }
+        .t-unit small { font-size: 0.65rem; text-transform: uppercase; opacity: 0.8; }
+
+        /* RSVP (WhatsApp) */
+        .rsvp-card { background: white; padding: 30px; border-radius: 30px; max-width: 350px; width: 100%; box-shadow: 0 10px 30px rgba(247,231,206,0.3); }
+        .rsvp-input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #f3e5e2; font-family: 'Montserrat'; font-size: 1rem; color: var(--text); background-color: #fdfafb; }
+        .btn-wa { background: #25D366; color: white; padding: 18px 45px; border: none; border-radius: 35px; cursor: pointer; font-weight: bold; font-size: 1.1rem; margin-top: 20px; box-shadow: 0 8px 20px rgba(37,211,102,0.3); transition: all 0.3s ease; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        
+        /* Բացելու կոճակ */
+        .open-btn { background: var(--accent); color: #5d4037; padding: 18px 60px; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.3rem; margin-top: 30px; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 8px 25px rgba(247,231,206,0.5); }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        #music-btn { position: fixed; top: 25px; right: 25px; z-index: 1000; background: white; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; font-size: 22px; border: 1px solid #f9f0ee; display: none; }
+    </style>
+</head>
+<body>
+    <div id="music-btn" onclick="toggleMusic()">🎵</div>
+    <audio id="bgMusic" loop preload="auto">
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="welcome-overlay">
+        <h1 class="title">Дима и Настя</h1>
+        <p class="subtitle">Приглашение на свадьбу</p>
+        <button class="open-btn" onclick="openInvitation()">Открыть</button>
+    </div>
+
+    <div id="main-content" style="display: none;">
+
+    <section>
+        <div class="page-bg" style="background-image: url('photo1.jpg');"></div>
+        <h2 class="info-title">Сохраните дату</h2>
+        <div class="info-card">
+            <div class="calendar-month">Ноябрь 2026</div>
+            <div class="calendar-grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; font-size: 0.9rem;">
+                <div style="color:#ccc">Пн</div><div style="color:#ccc">Вт</div><div style="color:#ccc">Ср</div><div style="color:#ccc">Чт</div><div style="color:#ccc">Пт</div><div style="color:#ccc">Сб</div><div style="color:#ccc">Вс</div>
+                <div></div><div></div><div></div><div></div><div></div><div></div>1
+                <div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div>
+                <div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div class="calendar-day highlight" style="background:var(--accent); color:#5d4037; border-radius:50%; font-weight:bold; padding:5px;">14</div><div>15</div>
+                <div>16</div><div>17</div><div>18</div><div>19</div><div>20</div><div>21</div><div>22</div>
+            </div>
+        </div>
+        <div class="timer">
+            <div class="t-unit"><span id="days">0</span><small>дней</small></div>
+            <div class="t-unit"><span id="hours">0</span><small>час</small></div>
+            <div class="t-unit"><span id="mins">0</span><small>мин</small></div>
+            <div class="t-unit"><span id="secs">0</span><small>сек</small></div>
+        </div>
+    </section>
+<section>
+        <div class="page-bg" style="background-image: url('photo2.jpg');"></div>
+        <div class="info-card">
+            <h3 class="info-title">📍 Где и когда</h3>
+            <p style="margin: 20px 0; line-height: 1.6;">Суббота, 14 Ноября 2026 года</p>
+            <p style="margin: 15px 0;"><b>15:00</b> — Торжественное венчание<br>Церковь Сурб Гаянэ (Москва)</p>
+            <p style="margin: 15px 0;"><b>19:00</b> — Праздничный ужин<br>Ресторан "Кремлёвский"</p>
+            <a href="https://maps.app.goo.gl/xxxxxx" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: bold; border-bottom: 1px dashed;">Открыть карту 📍</a>
+        </div>
+    </section>
+
+    <section>
+        <div class="info-card rsvp-card">
+            <h3 class="info-title">RSVP</h3>
+            <p style="font-size: 0.85rem; margin-bottom: 15px; color: #777;">Пожалуйста, подтвердите присутствие до 1 ноября, нажав на кнопку 👇🏻</p>
+            <div class="rsvp-form" style="text-align: left;">
+                <input type="text" id="guestName" placeholder="Ваше Имя и Фамилия" class="rsvp-input" required>
+                <select id="guestCount" class="rsvp-input">
+                    <option value="1">1 человек</option>
+                    <option value="2">2 человека</option>
+                    <option value="3">3 человека</option>
+                    <option value="4+">4 и более</option>
+                </select>
+                <input type="text" id="details" placeholder="Сколько взрослых и детей?" class="rsvp-input">
+                <button class="btn-wa" onclick="sendToWhatsApp()">ПОДТВЕРДИТЬ (WhatsUp)</button>
+            </div>
+        </div>
+    </section>
+<script>
+        // Երաժշտության և Բացման ֆունկցիա
+        const audio = document.getElementById("bgMusic");
+        const musicBtn = document.getElementById("music-btn");
+        const overlay = document.getElementById("welcome-overlay");
+        const mainContent = document.getElementById("main-content");
+        
+        function openInvitation() {
+            // Միացնում ենք երաժշտությունը
+            audio.play().catch(e => { console.log("Music play blocked"); });
+            musicBtn.style.display = "flex";
+            musicBtn.innerText = "🔊";
+            
+            // Թաքցնում ենք ծածկոցը և բացում սայթը
+            overlay.style.opacity = "0";
+            setTimeout(() => {
+                overlay.style.display = "none";
+                mainContent.style.display = "block";
+            }, 1000);
+        }
+
+        function toggleMusic() {
+            if (audio.paused) { audio.play(); musicBtn.innerText = "🔊"; }
+            else { audio.pause(); musicBtn.innerText = "🔇"; }
+        }
+
+        // Թայմերի աշխատանքը
+        const targetDate = new Date("November 14, 2026 15:00:00").getTime();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+            document.getElementById("days").innerText = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
+            document.getElementById("hours").innerText = Math.max(0, Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+            document.getElementById("mins").innerText = Math.max(0, Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)));
+            document.getElementById("secs").innerText = Math.max(0, Math.floor((diff % (1000 * 60)) / 1000));
+        }, 1000);
+
+        // WhatsUp-ով ուղարկելու ֆունկցիա
+        function sendToWhatsApp() {
+            const name = document.getElementById("guestName").value;
+            const count = document.getElementById("guestCount").value;
+            const details = document.getElementById("details").value;
+            const phoneNumber = "37496872922"; // Քո WhatsUp համարը
+
+            if (name && details) {
+                const message = `Привет, Настья! Это ${name}. %0AЯ подтверждаю участие в свадьбе Димы и Насти. %0AКоличество: ${count} чел. %0AДетали: ${details}`;
+                // Բացում ենք WhatsUp լինկը
+                window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+            } else { alert("Пожалуйста, заполните Имя и Детали ✨"); }
+        }
+    </script>
+</body>
+</html>
